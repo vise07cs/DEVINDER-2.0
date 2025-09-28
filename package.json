@@ -1,0 +1,24 @@
+{
+  "name": "dev-tinder-2.0",
+  "version": "1.0.0",
+  "description": "devinder2.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vise07cs/DEVINDER-2.0.git"
+  },
+  "author": "vise",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vise07cs/DEVINDER-2.0/issues"
+  },
+  "homepage": "https://github.com/vise07cs/DEVINDER-2.0#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
+ 
