@@ -3,20 +3,53 @@ console.log("App is starting...");
 const express=require('express');
 const app=express();
 
+app.use("/user",(req,res,next)=>{
+ 
+    // res.send("Hello from user")
+    console.log("Hello User 1")
+    next();
+
+},
 
 
-app.get("/user",(req,res)=>{
-    res.send("Hello User");
-});
+  (req,res,next)=>{
+ 
+    // res.send("Hello from user")
+    console.log("Hello User 2")
+    next();
 
-app.post("/user",(req,res)=>{
-    res.send("Post request to user");
-})
+},
+
+(req,res,next)=>{
+ 
+    // res.send("Hello from user")
+    console.log("Hello User 3")
+    next();
+
+},
+
+(req,res,next)=>{
+ 
+    // res.send("Hello from user")
+    console.log("Hello User 4")
+    
+    next();
+
+},
+(req,res,next)=>{
+ 
+    // res.send("Hello from user")
+    console.log("Hello User 5")
+    res.send("Hello user 5")
+    // next();
+
+}
 
 
-app.delete("/user",(req,res)=>{
-    res.send("Delete request to user");
-})
+
+
+)
+
 
 
 
