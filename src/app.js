@@ -1,59 +1,47 @@
 console.log("App is starting...");
 
+
 const express=require('express');
 const app=express();
+const {authMiddleware,userMiddleware}=require('../middlewares/auth');
 
-app.use("/user",(req,res,next)=>{
+
+
+
+
+
+app.use("/admin",authMiddleware);
+
+
+app.get("/admin/getData",(req,res)=>{
+    res.send("This is the admin data we got after authentication");
+});
+
+app.get("/admin/deleteData",(req,res)=>{
+    res.send("This is delete data  we got after authentication");
+});
+
+
+app.get("/user/data",userMiddleware, (req,res)=>{
+    res.send("This is user data that anyone can access");
+});
+
+
+
  
-    // res.send("Hello from user")
-    console.log("Hello User 1")
-    next();
-
-},
-
-
-  (req,res,next)=>{
- 
-    // res.send("Hello from user")
-    console.log("Hello User 2")
-    next();
-
-},
-
-(req,res,next)=>{
- 
-    // res.send("Hello from user")
-    console.log("Hello User 3")
-    next();
-
-},
-
-(req,res,next)=>{
- 
-    // res.send("Hello from user")
-    console.log("Hello User 4")
-    
-    next();
-
-},
-(req,res,next)=>{
- 
-    // res.send("Hello from user")
-    console.log("Hello User 5")
-    res.send("Hello user 5")
-    // next();
-
-}
-
-
-
-
-)
-
-
-
-
 
 app.listen(3003,()=>{
     console.log("server is running on port 3003");
-});
+}); 
+
+
+// The current code flow 
+// Request hits Express.
+
+// Middleware,  authMiddleware runs (app.use("/admin", authMiddleware)).
+
+// Middleware calls next().
+
+// Express finds the matching route (app.get("/admin/deleteData")).
+
+// That route sends the response.
