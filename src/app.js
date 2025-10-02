@@ -7,14 +7,14 @@ const {authMiddleware,userMiddleware}=require('../middlewares/auth');
 const connectDB = require('./config/db');
 const User=require('./models/user');
 
+app.use(express.json());
+
+
+
 app.post("/signup",async (req,res)=>{
-    const user=new User({
-        firstName:"Virat",
-        lastName:"Kohli",
-        email:"virat@gmail.com",
-        age:32,
-        pw:"virat123",
-    })
+  console.log(req.body);
+    
+    const user=new User(req.body);
     // creating a new instance of user model
 
     try{
