@@ -84,7 +84,7 @@ app.delete("/user",async (req,res)=>{
 app.put("/user",async (req,res)=>{
   try{
     
-    const user=await User.findOneAndUpdate({email:req.body.email},req.body,{new:true});
+    const user=await User.findOneAndUpdate({email:req.body.email},req.body,{new:true,runValidators:true});
     if(!user){
       return res.status(404).send("User not found");
     } 
