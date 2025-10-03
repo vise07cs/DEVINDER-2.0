@@ -46,10 +46,20 @@ const userSchema=new mongoose.Schema({
       default:"This user prefers to keep an air of mystery about them."
     },
     skills:{
-      type:[String]
+      type:[String],
+      validate:{
+        validator:function(value){
+          return value.length<=5;
+        },
+        message:"A maximum of 5 skills are allowed."
+      }
+      
+
+
+
     }
     
-});
+},{timestamps:true});
 
 
 const User=mongoose.model("User",userSchema);

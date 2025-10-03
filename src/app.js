@@ -82,9 +82,16 @@ app.delete("/user",async (req,res)=>{
 // update a user from the database by email
 
 app.put("/user",async (req,res)=>{
-  try{
+  try{ 
+
+    const allowedUpdates=["about","skills","age","photoURL"];
+    const updates=Object.keys(req.body);
+    const isValidOperation=updates.every((update)=>allowedUpdates.includes(update));
+    if(!isValidOperation){
+      return res.status(400).send("Invalid updates!");
+    }
     
-    const user=await User.findOneAndUpdate({email:req.body.email},req.body,{new:true,runValidators:true});
+    const user=await User.findOneAndUpdate({email:req.query.email},req.body,{new:true,runValidators:true});
     if(!user){
       return res.status(404).send("User not found");
     } 
