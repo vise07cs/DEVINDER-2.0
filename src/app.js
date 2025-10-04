@@ -6,26 +6,43 @@ const app=express();
 const {authMiddleware,userMiddleware}=require('../middlewares/auth');
 const connectDB = require('./config/db');
 const User=require('./models/user');
-
+const {validateSignupData}=require('./utils/validation');
 app.use(express.json());
+const bcrypt=require('bcrypt');
 
 
 
 app.post("/signup",async (req,res)=>{
-  // console.log(req.body);
-    
-    const user=new User(req.body);
+  // validation of data 
+  try{
+      validateSignupData(req);
+
+  const {firstName,lastName,email,password}=req.body;
+
+  // encryption of password
+
+  const passwordHash=await bcrypt.hash(req.body.password,10);
+
+
+    const user=new User({
+      firstName,
+      lastName,
+      email,
+      password:passwordHash,
+    });
     // creating a new instance of user model
 
-    try{
+    
      await user.save();
     res.send("User signed up successfully");
 
-
     }catch(err){
-        console.log("Error in saving user to db",err);
-        res.status(500).send("Internal server error");
-    }
+    return res.status(400).send(err.message);
+  }
+
+
+  
+    
  
 });
 
