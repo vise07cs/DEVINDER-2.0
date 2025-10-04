@@ -39,12 +39,32 @@ app.post("/signup",async (req,res)=>{
     }catch(err){
     return res.status(400).send(err.message);
   }
-
-
-  
-    
- 
 });
+
+// Login API
+app.post("/login",async(req,res)=>{
+  try{
+    const {email,password}=req.body;
+    const user=await User.findOne({
+      email:email
+    });
+    if(!user){
+      throw new Error("User not found");
+    }
+    const isPasswordValid=await bcrypt.compare(password,user.password);
+    if(!isPasswordValid){
+       throw new Error("User not found");
+    }
+    res.send("User logged in successfully");
+
+  }catch(err){
+    return res.status(400).send(err.message);
+
+  }
+    
+})
+
+
 
 // Get all users from the database
 app.get("/feed",async (req,res)=>{
