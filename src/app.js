@@ -9,8 +9,11 @@ const User=require('./models/user');
 const {validateSignupData}=require('./utils/validation');
 app.use(express.json());
 const bcrypt=require('bcrypt');
+const JWT=require('jsonwebtoken');
+const cookieParser=require('cookie-parser');
 
-
+app.use(express.json());
+app.use(cookieParser());
 
 app.post("/signup",async (req,res)=>{
   // validation of data 
@@ -55,6 +58,14 @@ app.post("/login",async(req,res)=>{
     if(!isPasswordValid){
        throw new Error("User not found");
     }
+    // create JWT token
+    const token=JWT.sign({id:user._id},"dev@tinder");
+    // console.log(token);
+    res.cookie("token",token);
+
+    // add token in cookie and send response back to the user
+
+
     res.send("User logged in successfully");
 
   }catch(err){
@@ -64,6 +75,35 @@ app.post("/login",async(req,res)=>{
     
 })
 
+// get current user profile
+app.get("/profile",async (req,res)=>{
+  try{
+    const {token}=req.cookies;
+    if(!token){
+      return res.status(401).send("Unauthorized access , token not available");
+    }
+
+    // validate token
+    const isTokenValid=JWT.verify(token,"dev@tinder");
+    if(!isTokenValid){
+      return res.status(401).send("Unauthorized access");
+    }
+
+    console.log(isTokenValid);
+    const {id}=isTokenValid;
+    const user=await User.findById(id);
+    if(!user){
+      return res.status(404).send("User not found");
+    }
+    // console.log(user);
+  
+    res.send(user);
+  }catch(err){
+    return res.status(400).send(err.message);
+
+  }
+}
+)
 
 
 // Get all users from the database
@@ -138,12 +178,6 @@ app.put("/user",async (req,res)=>{
     res.status(500).send("Internal server error");
   }
 })
-
-
-
-
-
-
 
 
 
