@@ -1,5 +1,8 @@
 const mongoose=require('mongoose');
 const validator=require('validator');
+const bcrypt=require('bcrypt');
+const JWT=require('jsonwebtoken');
+
 const userSchema=new mongoose.Schema({
     firstName:{
         type:String,  
@@ -74,6 +77,26 @@ const userSchema=new mongoose.Schema({
     }
     
 },{timestamps:true});
+
+userSchema.methods.getJWT= async function(){
+  const user=this;
+  const token=JWT.sign({id:user._id},"dev@tinder",{expiresIn:"1d"});
+  return token;
+  
+}
+
+
+userSchema.methods.validatePassword= async function(passwordEnteredByUser){
+  const user=this;
+  const passwordHash=user.password;
+
+    const isPasswordValid=await bcrypt.compare(passwordEnteredByUser,passwordHash);
+    if(!isPasswordValid){
+       throw new Error("User not found");
+    }
+    return isPasswordValid;
+
+}
 
 
 const User=mongoose.model("User",userSchema);
