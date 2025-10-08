@@ -19,4 +19,17 @@ const validateSignupData=(req)=>{
 
 }
 
-module.exports={validateSignupData};
+
+
+const validateProfileData=(req)=>{
+  const allowedUpdates=["firstName","lastName","email","skills","bio","location","about"]
+  const updates=Object.keys(req.body);
+
+  const isValidOperation=updates.every((update)=>allowedUpdates.includes(update));
+  if(!isValidOperation){
+    throw new Error("Invalid updates");
+  }
+  return isValidOperation;
+}
+
+module.exports={validateSignupData,validateProfileData};
