@@ -42,24 +42,27 @@ profileRouter.patch("/profile/edit",userAuth, async (req,res)=>{
 }
 )  
 
-// forgot password API
-profileRouter.post("/forgotpassword",async(req,res)=>{
-  try{
-    const {email,newPassword}=req.body;
-    const user=await User.findOne({ email:email });
-    if(!user){
-      throw new Error("User not found");
-    }
-    const passwordHash=await bcrypt.hash(newPassword,10);
-    user.password=passwordHash;
-    await user.save();
-    res.send("Password reset successfully");
-  }catch(err){
-    return res.status(400).send(err.message);
+// // forgot password API
+// profileRouter.post("/forgotpassword",userAuth,async(req,res)=>{
+//   try{
+//     const {email,newPassword}=req.body;
+//     const user=await User.findOne({ email:email });
+//     if(!user){
+//       throw new Error("User not found");
+//     }
+//     const passwordHash=await bcrypt.hash(newPassword,10);
+//     user.password=passwordHash;
+//     await user.save();
+//     res.send("Password reset successfully");
+//   }catch(err){
+//     return res.status(400).send(err.message);
 
-  }
-}
-) 
+//   }
+// }
+// ) 
+
+
+
 
 
 

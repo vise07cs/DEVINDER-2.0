@@ -8,7 +8,8 @@ const userSchema=new mongoose.Schema({
         type:String,  
         required:true,
         minLength:3,
-        maxLength:30
+        maxLength:30,
+        index:true,      // to make it searchable
     },
      lastName:{
         type:String,  
@@ -46,12 +47,11 @@ const userSchema=new mongoose.Schema({
       type:String,
       trim:true,
       lowercase:true,
-      validate(value){
-        const allowedGenders=["male","female","other"];
-        if(!allowedGenders.includes(value)){
-          throw new Error("Gender must be Male, Female or Other");
-        } 
-      }
+       enum:{
+     values: ["male","female","others"],
+      message:"not a valid gender typed"
+    }
+    
 
 
     },

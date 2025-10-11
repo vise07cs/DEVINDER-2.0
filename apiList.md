@@ -13,11 +13,13 @@ GET/profile/view
 PATCH/profile/edit
 PATCH/profile/password
 
+
 # connection request router
 POST  /request/send/interested/:userID
 POST  /request/send/ignored/:userID
 POST /request/review/accepted/:requestID
 POST /request/review/rejected/:requestID
+
 
 # user routers
 GET user/connections
