@@ -61,6 +61,13 @@ userRouter.get("/user/requests/accepted", userAuth, async (req, res) => {
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
+    const page = parseInt(req.query.page) || 1; // default to page 1 if not provided
+    let limit = parseInt(req.query.limit) || 10; // default to 10 users per page if not provided
+    if (limit > 50) limit = 50; // maximum limit of 50 users per page
+
+    const skip = (page - 1) * limit;
+
+
 
     // get all users who have sent or received connection requests to/from the logged in user
     const usersWithConnectionRequests = await ConnectionRequestModel.find({
@@ -81,12 +88,13 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
         {
           _id: { $ne: loggedInUser._id }
         }, // $ne operator to find users whose _id is not equal to the logged in user's _id
-        
+
         {
           _id: { $nin: Array.from(hideUsersFromFeed) }, // $nin operator to find users whose _id is not in the array of user ids to be hidden from feed
         },
       ],
-    }).select("-password -__v -createdAt -updatedAt"); // exclude password and __v field from the result
+    }).select("-password -__v -createdAt -updatedAt") // exclude password and __v field from the result
+    .skip(skip).limit(limit); // implement pagination using skip and limit
 
 
     res.json({
@@ -103,5 +111,17 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     return res.status(400).send(err.message);
   }
 });
+
+
+// pagination logic explanation:
+// adding pagination to the feed API to get users in chunks of 10 similar to infinite scroll feature used in social media apps like Instagram, Facebook , Tinder etc
+
+//  feed?page=1&limit=10 ==> page 1 with 10 users per page (1-10)
+//  feed?page=2&limit=10 ==> page 2 with 10 users per page  (11-20)
+// feed?page=3&limit=10 ==> page 3 with 10 users per page   (21-30)
+
+// skip and limit are mongoose methods to implement pagination
+// skip(0) & limit(10) ==> page 1 ---> skip 0 users and limit to 10 users
+
 
 module.exports = { userRouter };
